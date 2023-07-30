@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value ="/user")
 public class UserResource {
+
+    private static final String ID = "/{id}";
 
     @Autowired
     private UserService service;
+
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id){
         return ResponseEntity.ok().body(service.findById(id));
