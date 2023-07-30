@@ -5,6 +5,7 @@ import br.com.vastidev.api.domain.Users;
 import br.com.vastidev.api.domain.dto.UsersDto;
 import br.com.vastidev.api.repositories.UserRepository;
 import br.com.vastidev.api.services.UserService;
+import br.com.vastidev.api.services.exceptios.DataIntegratyViolationException;
 import br.com.vastidev.api.services.exceptios.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users create(UsersDto obj) {
-        return repository.save(mapper.map(obj, Users.class));
-    }
+        findByEmail(obj);
+        return repository.save(mapper.map(obj, Users.class));}
+
+    private void findByEmail(UsersDto obj) {
+        Optional<Users> users = repository.findByEmail(obj.getEmail());
+        if(users.isPresent()){
+            throw new DataIntegratyViolationException("E-mail já cadastrasdo no sistema!");
+        }
+        }
+
 }
