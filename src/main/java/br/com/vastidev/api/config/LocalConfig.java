@@ -1,27 +1,29 @@
 package br.com.vastidev.api.config;
 
-import br.com.vastidev.api.domain.User;
+
+import br.com.vastidev.api.domain.Users;
 import br.com.vastidev.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
-@Configuration
-@Profile("local")
+@Component
 public class LocalConfig {
 
-    @Autowired
-    private UserRepository repository;
+    private final UserRepository repository;
 
-    @Bean
-    public void startDB() {
-        User u1 = new User(null, "Valdir", "valdir@mail.com", "123");
-        User u2 = new User(null, "Luiz", "luiz@mail.com", "123");
+    @Autowired
+    public LocalConfig(UserRepository repository) {
+        this.repository = repository;
+    }
+
+    @PostConstruct
+    public void initializeDB() {
+        Users u1 = new Users(null, "Valdir", "valdir@mail.com", "123");
+        Users u2 = new Users(null, "Luiz", "luiz@mail.com", "123");
 
         repository.saveAll(List.of(u1, u2));
     }
-
 }
