@@ -2,9 +2,11 @@ package br.com.vastidev.api.services.impl;
 
 
 import br.com.vastidev.api.domain.Users;
+import br.com.vastidev.api.domain.dto.UsersDto;
 import br.com.vastidev.api.repositories.UserRepository;
 import br.com.vastidev.api.services.UserService;
 import br.com.vastidev.api.services.exceptios.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private ModelMapper mapper;
+
     @Override
     public Users findById(Integer id) {
         Optional<Users> obj = repository.findById(id);
@@ -23,5 +29,10 @@ public class UserServiceImpl implements UserService {
     }
     public List<Users> findAll(){
         return repository.findAll();
+    }
+
+    @Override
+    public Users create(UsersDto obj) {
+        return repository.save(mapper.map(obj, Users.class));
     }
 }
