@@ -11,5 +11,7 @@ public interface UserService {
     List<Users> findAll();
 
     Users create(UsersDto obj);
+
+    Users update(UsersDto obj);
 }
 
