@@ -3,6 +3,7 @@ package br.com.vastidev.api.services.impl;
 import br.com.vastidev.api.domain.Users;
 import br.com.vastidev.api.domain.dto.UsersDto;
 import br.com.vastidev.api.repositories.UserRepository;
+import br.com.vastidev.api.services.exceptios.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -54,10 +55,26 @@ class UserServiceImplTest {
         assertEquals(Users.class, response.getClass());
         assertEquals(ID, response.getId());
     }
-
     @Test
-    void findAll() {
+    void whenFindByIdThenReturnAnObjectNotFoundException(){
+        when(repository.findById(anyInt()))
+                .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+
+        try{
+            service.findById(ID);
+        }catch (Exception ex){
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals("Objeto não encontrado", ex.getMessage());
+        }
     }
+
+
+
+
+   // @Test
+  //  void whenFindAllThenReturnList() {
+   //     when(repository.findAll())
+    //}
 
     @Test
     void create() {
