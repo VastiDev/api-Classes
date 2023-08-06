@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -86,7 +87,20 @@ class UserServiceImplTest {
      }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSucces() {
+        when(repository.save(any())).thenReturn(users);
+
+        Users response = service.create(usersDto);
+
+        assertNotNull(response);
+        assertEquals(Users.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME1, response.getName());
+        assertEquals(MAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+
+
+
     }
 
     @Test
