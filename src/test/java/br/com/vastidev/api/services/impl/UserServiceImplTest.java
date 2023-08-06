@@ -3,6 +3,7 @@ package br.com.vastidev.api.services.impl;
 import br.com.vastidev.api.domain.Users;
 import br.com.vastidev.api.domain.dto.UsersDto;
 import br.com.vastidev.api.repositories.UserRepository;
+import br.com.vastidev.api.services.exceptios.DataIntegratyViolationException;
 import br.com.vastidev.api.services.exceptios.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -98,9 +98,18 @@ class UserServiceImplTest {
         assertEquals(NAME1, response.getName());
         assertEquals(MAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+    @Test
+    void whenCreateThenReturnIntegrityViolationException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUsers);
+        try{
+            optionalUsers.get().setId(2);
+            service.create(usersDto);
+        }catch(Exception ex){
 
-
-
+            assertEquals(DataIntegratyViolationException.class, ex.getClass());
+            assertEquals("E-mail já cadastrasdo no sistema!", ex.getMessage());
+        }
     }
 
     @Test
