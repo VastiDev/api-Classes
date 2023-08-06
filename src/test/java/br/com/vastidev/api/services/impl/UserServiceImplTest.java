@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -139,8 +139,27 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void deleteWithSuccess() {
+        when(repository.findById(anyInt())).thenReturn(optionalUsers);
+        doNothing().when(repository).deleteById(anyInt());
+        service.delete(ID);
+
+        verify(repository, times(1)).deleteById(anyInt());
     }
+
+   /* @Test
+    void whenDeleyeByIdThenReturnAnObjectNotFoundException(){
+        when(repository.findById(anyInt()))
+                .thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+
+        try{
+            service.delete(ID);
+        }catch (Exception ex){
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals("Objeto não encontrado", ex.getMessage());
+
+    }*/
+
     private void startUser(){
         users = new Users(ID, NAME1, MAIL, PASSWORD);
         usersDto = new UsersDto(ID, NAME1, MAIL, PASSWORD);
